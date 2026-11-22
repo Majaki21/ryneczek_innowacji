@@ -6,6 +6,7 @@ import re
 import sqlite3
 
 from .words import build_lookup
+from . import reviews_november
 
 NCBR = "https://www.gov.pl/web/ncbr/"
 CHEMICAL = "Technologie chemiczne"
@@ -113,7 +114,8 @@ def enrich(db):
             db.execute("UPDATE projects SET category='Technologia',classification_status='do sprawdzenia' WHERE id=?", (project_id,))
             add_facet(db, project_id, "subcategory", CHEMICAL)
             rule_count += 1
-    for slug, (stage, categories, summary, evidence, sources) in REVIEWS.items():
+    reviewed_cards = REVIEWS | reviews_november.REVIEWS
+    for slug, (stage, categories, summary, evidence, sources) in reviewed_cards.items():
         row = db.execute("SELECT id FROM projects WHERE source='NCBR' AND source_id=?", (NCBR + slug,)).fetchone()
         if row is None:
             raise ValueError(f"Brak rekordu NCBR: {slug}")
@@ -123,7 +125,13 @@ def enrich(db):
               summary=?, deployment=CASE WHEN ?='yes' THEN 'yes' ELSE deployment END,
               deployment_stage=?, deployment_note=?
             WHERE id=?
-        """, ("Edukacja" if slug == ALK else "Technologia", summary, stage, stage, evidence, project_id))
+        """, (reviews_november.DOMAINS.get(slug, "Edukacja" if slug == ALK else "Technologia"),
+               summary, stage, stage, evidence, project_id))
+        if slug in reviews_november.TRL:
+            db.execute("""
+                UPDATE projects SET trl_min=?,trl_max=?,trl_basis='estimate',trl_evidence=NULL
+                WHERE id=? AND (trl_basis IS NULL OR trl_basis!='declared')
+            """, (*reviews_november.TRL[slug], project_id))
         for category in categories:
             add_facet(db, project_id, "subcategory", category)
         if slug == "toucan-eye":
@@ -149,7 +157,7 @@ def enrich(db):
         raise ValueError(f"Oczekiwano 500 kart z uzupełnieniami, otrzymano {reviewed}.")
     db.execute("DROP TABLE project_words")
     build_lookup(db)
-    print(f"Sprawdzono źródła dla {len(REVIEWS)} kart. Poprawiono kategorię regułą tytułu dla {rule_count} kart.")
+    print(f"Sprawdzono źródła dla {len(reviewed_cards)} kart. Poprawiono kategorię regułą tytułu dla {rule_count} kart.")
 
 
 if __name__ == "__main__":
