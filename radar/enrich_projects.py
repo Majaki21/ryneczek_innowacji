@@ -182,6 +182,10 @@ def enrich(db):
             reviewed += 1
     if reviewed != 500:
         raise ValueError(f"Oczekiwano 500 kart z uzupełnieniami, otrzymano {reviewed}.")
+    db.execute("""
+        UPDATE projects SET title='Innowacyjna Biogazownia w Brodach – biometan z biogazu'
+        WHERE source='NCBR' AND source_id=?
+    """, (NCBR + "innowacyjna-biogazownia3",))
     live_count = add_live_reviews(db)
     db.execute("DROP TABLE project_words")
     build_lookup(db)

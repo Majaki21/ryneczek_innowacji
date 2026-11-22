@@ -72,9 +72,9 @@ def build_lookup(db):
         )
     """)
     db.executemany("INSERT INTO project_words(rowid, terms) VALUES (?, ?)", (
-        (project_id, " ".join(WORD.findall(normalize(" ".join((title, summary, details))))))
-        for project_id, title, summary, details in db.execute(
-            "SELECT id,title,summary,business_details FROM projects"
+        (project_id, " ".join(WORD.findall(normalize(" ".join((title, summary, details, evidence))))))
+        for project_id, title, summary, details, evidence in db.execute(
+            "SELECT id,title,summary,business_details,coalesce(deployment_note,'') FROM projects"
         )
     ))
     db.execute("INSERT INTO project_words(project_words) VALUES ('optimize')")
@@ -95,12 +95,13 @@ def rank(db, query, where, params, *, indexed=True):
             p.id IN (SELECT rowid FROM project_words WHERE project_words MATCH ?)
         """
         params = [*params, lookup]
-    for project_id, title, summary, details in db.execute(
-        "SELECT id,title,summary,business_details FROM projects p" + where, params
+    for project_id, title, summary, details, evidence in db.execute(
+        "SELECT id,title,summary,business_details,coalesce(deployment_note,'') FROM projects p" + where, params
     ):
         title = normalize(title)
         description = normalize(summary)
         business = normalize(details)
+        documented_use = normalize(evidence)
         score = 0
         matched = 0
         for exact, broad in groups:
@@ -110,9 +111,11 @@ def rank(db, query, where, params, *, indexed=True):
                 4 if exact.search(description) else
                 3 if broad.search(description) else
                 2 if exact.search(business) else
-                1 if broad.search(business) else 0
+                1 if broad.search(business) else
+                2 if exact.search(documented_use) else
+                1 if broad.search(documented_use) else 0
             )
-            score += weight
+            score += weight + (2 if broad.search(documented_use) and broad.search(description) else 0)
             matched += bool(weight)
         if matched == len(groups):
             full.append((-score, project_id))
