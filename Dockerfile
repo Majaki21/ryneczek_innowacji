@@ -8,6 +8,6 @@ COPY sources/catalog-filters.json sources/catalog-filters.json
 COPY sources/catalog.json sources/catalog.json
 COPY sources/search.sqlite.gz sources/search.sqlite.gz
 RUN python -c "import gzip, shutil; from pathlib import Path; p=Path('sources/search.sqlite.gz'); shutil.copyfileobj(gzip.open(p,'rb'),p.with_suffix('').open('wb')); p.unlink()"
-RUN python -m radar.update_maturity
+RUN python -m radar.enrich_projects && python -m radar.update_maturity
 ENV RADAR_PHRASE_MODE=words
 CMD ["sh", "-c", "exec uvicorn radar.public:app --host 0.0.0.0 --port ${PORT:-10000}"]

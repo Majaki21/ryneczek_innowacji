@@ -274,7 +274,9 @@ function buildFilters(options) {
 }
 
 const deploymentLabels = {
-  yes: "Potwierdzone wdrożenie",
+  yes: "Wdrożenie udokumentowane w źródle",
+  in_progress: "Pilotaż lub wdrażanie opisane w źródle",
+  potential: "Potencjał wdrożenia",
   no: "Potwierdzony brak wdrożenia",
   unknown: "Brak danych o wdrożeniu",
 };
@@ -377,9 +379,13 @@ async function showCatalogDetail(item, trigger) {
     }
     element("h3", "Gotowość i wdrożenie", content);
     element("p", maturityLabel(record), content);
-    if (record.trl_evidence) element("blockquote", record.trl_evidence, content);
+    if (record.trl_basis !== "profile" && record.trl_evidence) element("blockquote", record.trl_evidence, content);
     element("p", deploymentLabels[record.deployment || "unknown"], content);
     if (record.deployment_note) element("p", record.deployment_note, content);
+    if (record.review_sources?.length) {
+      element("h3", "Materiały o testach i wdrożeniu", content);
+      record.review_sources.forEach(source => sourceLink(content, source.label, source.url));
+    }
     if (record.organizations.length) {
       addList(content, "Organizacje wskazane w źródle",
         record.organizations.map(org => [org.nazwa, org.rola].filter(Boolean).join(" · ")), "");

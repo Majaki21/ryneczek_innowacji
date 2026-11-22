@@ -11,7 +11,7 @@ from fastapi import APIRouter, HTTPException, Query
 
 router = APIRouter(prefix="/api/catalog")
 PHRASE_LOCK = Lock()
-CARD_FIELDS = "id,title,summary,business_details,url,source,category,trl,deployment,page_url,page_specific,trl_min,trl_max,trl_basis"
+CARD_FIELDS = "id,title,summary,business_details,url,source,category,trl,COALESCE(deployment_stage,deployment) AS deployment,page_url,page_specific,trl_min,trl_max,trl_basis"
 SOURCE_DIR = Path(__file__).resolve().parents[1] / "sources"
 UNKNOWN = "unknown"
 Filters = Annotated[list[str] | None, Query(max_length=40)]
@@ -74,14 +74,14 @@ def categories_filter(categories, subcategories):
     return "(" + " OR ".join(branches) + ")", params
 
 
-def enum_filter(column, values):
+def enum_filter(expression, values):
     conditions = []
     params = []
     for value in dict.fromkeys(values):
         if value == UNKNOWN:
-            conditions.append(f"p.{column} IS NULL")
+            conditions.append(f"{expression} IS NULL")
         else:
-            conditions.append(f"p.{column}=?")
+            conditions.append(f"{expression}=?")
             params.append(value)
     return "(" + " OR ".join(conditions) + ")", params
 
@@ -114,7 +114,7 @@ def build_where(category, subcategory, technology, place, trl, deployment, skip=
                 params.append(int(value))
         conditions.append("(" + " OR ".join(alternatives) + ")")
     if deployment and skip != "deployment":
-        clause, values = enum_filter("deployment", deployment)
+        clause, values = enum_filter("COALESCE(p.deployment_stage,p.deployment)", deployment)
         conditions.append(clause)
         params.extend(values)
     return (" WHERE " + " AND ".join(conditions) if conditions else ""), params
@@ -130,7 +130,8 @@ def available_filters(db, category, subcategory, technology, place, trl, deploym
                 values.update([UNKNOWN] if low is None else map(str, range(low, high + 1)))
             availability[kind] = sorted(values)
         if kind in ("category", "deployment"):
-            rows = db.execute(f"SELECT DISTINCT p.{kind} FROM projects p" + where, params)
+            expression = "COALESCE(p.deployment_stage,p.deployment)" if kind == "deployment" else "p.category"
+            rows = db.execute(f"SELECT DISTINCT {expression} FROM projects p" + where, params)
             availability[kind] = [str(row[0]) if row[0] is not None else UNKNOWN for row in rows]
         if kind in ("category", "technology", "place"):
             facet_kind = "subcategory" if kind == "category" else kind
@@ -151,7 +152,7 @@ def catalog(
     technology: Filters = None,
     place: Filters = None,
     trl: Filters = None,
-    deployment: Annotated[list[Literal["yes", "no", "unknown"]] | None, Query(max_length=3)] = None,
+    deployment: Annotated[list[Literal["yes", "no", "unknown", "in_progress", "potential"]] | None, Query(max_length=5)] = None,
     availability: bool = False,
     page: Annotated[int, Query(ge=1, le=5000)] = 1,
     page_size: Annotated[int, Query(ge=1, le=60)] = 18,
@@ -181,7 +182,7 @@ def catalog(
         else:
             total = db.execute("SELECT count(*) FROM projects p" + where, params).fetchone()[0]
             rows = db.execute(f"SELECT {CARD_FIELDS} FROM projects p" + where + """
-                ORDER BY CASE WHEN deployment='yes' THEN 0 ELSE 1 END, title COLLATE NOCASE, id
+                ORDER BY CASE WHEN COALESCE(deployment_stage,deployment)='yes' THEN 0 ELSE 1 END, title COLLATE NOCASE, id
                 LIMIT ? OFFSET ?
             """, (*params, page_size, offset))
             items = [item(row) for row in rows]
@@ -197,6 +198,11 @@ def detail(project_id: int):
         if row is None:
             raise HTTPException(404, "Nie znaleziono projektu.")
         data = item(row)
+        data["deployment"] = data["deployment_stage"] or data["deployment"]
+        evidence_sources = db.execute(
+            "SELECT label,url FROM project_review_sources WHERE project_id=? ORDER BY label", (project_id,)
+        ).fetchall()
+        data["review_sources"] = [item(source) for source in evidence_sources]
         labels = db.execute("SELECT kind,value FROM facets WHERE project=? ORDER BY value", (project_id,)).fetchall()
         related = db.execute("""SELECT id,title,source,url,page_url,page_specific FROM projects
                                 WHERE group_id=? AND id<>? ORDER BY title, id""",
