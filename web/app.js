@@ -277,6 +277,7 @@ const deploymentLabels = {
   yes: "Wdrożenie udokumentowane w źródle",
   in_progress: "Pilotaż lub wdrażanie opisane w źródle",
   potential: "Potencjał wdrożenia",
+  research: "Badania i prace rozwojowe",
   no: "Potwierdzony brak wdrożenia",
   unknown: "Brak danych o wdrożeniu",
 };

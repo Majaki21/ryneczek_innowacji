@@ -152,7 +152,7 @@ def catalog(
     technology: Filters = None,
     place: Filters = None,
     trl: Filters = None,
-    deployment: Annotated[list[Literal["yes", "no", "unknown", "in_progress", "potential"]] | None, Query(max_length=5)] = None,
+    deployment: Annotated[list[Literal["yes", "no", "unknown", "in_progress", "potential", "research"]] | None, Query(max_length=6)] = None,
     availability: bool = False,
     page: Annotated[int, Query(ge=1, le=5000)] = 1,
     page_size: Annotated[int, Query(ge=1, le=60)] = 18,

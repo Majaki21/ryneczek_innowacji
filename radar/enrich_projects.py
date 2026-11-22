@@ -99,6 +99,33 @@ def add_facet(db, project_id, kind, value):
     db.execute("INSERT OR IGNORE INTO facets(project,kind,value) VALUES(?,?,?)", (project_id, kind, value))
 
 
+def add_live_reviews(db):
+    updates = 0
+    for file in sorted(Path("sources/live-reviews").glob("*.json")):
+        for url, stage, trl, summary, evidence, refs in json.loads(file.read_text(encoding="utf-8")):
+            row = db.execute(
+                "SELECT id FROM projects WHERE source='NCBR' AND source_id=? "
+                "AND deployment IS NULL AND deployment_stage IS NULL", (url,)
+            ).fetchone()
+            if row is None:
+                raise ValueError(f"Brak karty bez statusu wdrożenia: {url}")
+            project_id = row[0]
+            db.execute("""
+                UPDATE projects SET deployment_stage=?,summary=?,deployment_note=? WHERE id=?
+            """, (stage, summary, evidence, project_id))
+            if trl:
+                db.execute("""
+                    UPDATE projects SET trl_min=?,trl_max=?,trl_basis='estimate',trl_evidence=NULL
+                    WHERE id=? AND (trl_basis IS NULL OR trl_basis!='declared')
+                """, (*trl, project_id))
+            db.executemany("INSERT INTO project_review_sources VALUES(?,?,?)",
+                           ((project_id, title, source_url) for title, source_url in refs))
+            updates += 1
+    if updates != 89:
+        raise ValueError(f"Oczekiwano 89 uzupełnień, otrzymano {updates}.")
+    return updates
+
+
 def enrich(db):
     db.execute("ALTER TABLE projects ADD COLUMN deployment_stage TEXT")
     db.executescript("""
@@ -155,9 +182,10 @@ def enrich(db):
             reviewed += 1
     if reviewed != 500:
         raise ValueError(f"Oczekiwano 500 kart z uzupełnieniami, otrzymano {reviewed}.")
+    live_count = add_live_reviews(db)
     db.execute("DROP TABLE project_words")
     build_lookup(db)
-    print(f"Sprawdzono źródła dla {len(reviewed_cards)} kart. Poprawiono kategorię regułą tytułu dla {rule_count} kart.")
+    print(f"Sprawdzono źródła dla {len(reviewed_cards) + live_count} kart. Poprawiono kategorię regułą tytułu dla {rule_count} kart.")
 
 
 if __name__ == "__main__":
