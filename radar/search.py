@@ -203,6 +203,13 @@ def detail(project_id: int):
             "SELECT label,url FROM project_review_sources WHERE project_id=? ORDER BY label", (project_id,)
         ).fetchall()
         data["review_sources"] = [item(source) for source in evidence_sources]
+        fragments = db.execute(
+            "SELECT source_url,fragments FROM project_source_fragments WHERE project_id=?", (project_id,)
+        ).fetchone()
+        data["source_fragments"] = (
+            {"url": fragments["source_url"], "items": json.loads(fragments["fragments"])}
+            if fragments else None
+        )
         labels = db.execute("SELECT kind,value FROM facets WHERE project=? ORDER BY value", (project_id,)).fetchall()
         related = db.execute("""SELECT id,title,source,url,page_url,page_specific FROM projects
                                 WHERE group_id=? AND id<>? ORDER BY title, id""",

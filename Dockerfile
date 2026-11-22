@@ -6,6 +6,7 @@ COPY radar radar
 COPY web web
 COPY sources/catalog-filters.json sources/catalog-filters.json
 COPY sources/catalog.json sources/catalog.json
+COPY sources/review500/ sources/review500/
 COPY sources/search.sqlite.gz sources/search.sqlite.gz
 RUN python -c "import gzip, shutil; from pathlib import Path; p=Path('sources/search.sqlite.gz'); shutil.copyfileobj(gzip.open(p,'rb'),p.with_suffix('').open('wb')); p.unlink()"
 RUN python -m radar.enrich_projects && python -m radar.update_maturity

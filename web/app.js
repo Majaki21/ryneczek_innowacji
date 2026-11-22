@@ -382,6 +382,16 @@ async function showCatalogDetail(item, trigger) {
     if (record.trl_basis !== "profile" && record.trl_evidence) element("blockquote", record.trl_evidence, content);
     element("p", deploymentLabels[record.deployment || "unknown"], content);
     if (record.deployment_note) element("p", record.deployment_note, content);
+    if (record.source_fragments) {
+      const excerpts = element("details", "", content);
+      element("summary", "Fragmenty opisu źródłowego", excerpts);
+      element("p", "Fragmenty dobrane automatycznie z tekstu źródła.", excerpts).className = "muted";
+      for (const [label, excerpt] of record.source_fragments.items) {
+        element("h4", label, excerpts);
+        element("blockquote", excerpt, excerpts);
+      }
+      sourceLink(excerpts, "Otwórz materiał źródłowy", record.source_fragments.url);
+    }
     if (record.review_sources?.length) {
       element("h3", "Materiały o testach i wdrożeniu", content);
       record.review_sources.forEach(source => sourceLink(content, source.label, source.url));

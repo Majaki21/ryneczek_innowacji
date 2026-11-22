@@ -1,6 +1,7 @@
 """Apply source-reviewed project facts and precise catalog classification rules."""
 from contextlib import closing
 from pathlib import Path
+import json
 import re
 import sqlite3
 
@@ -13,6 +14,12 @@ PHOTONICS = "Elektronika i fotonika"
 ZEUS = "opracowanie-bionicznej-protezy-przedramienia-zeus-o-modulowej-konstrukcji-odznaczajacej-sie-wysoka-wytrzymaloscia-na-uderzenia-i-intuicyjnej-kontroli-ruchu-opartej-na-przetwarzaniu-biosygnalow"
 ALK = "akademia-360---zintegrowany-system-podnoszenia-jakosci-w-alk"
 REVIEWS = {
+    "projekt-br-laven": (
+        "yes", ("Informatyka i telekomunikacja",),
+        "Laven opracował narzędzie do kalkulacji składek i parametrów produktów ubezpieczeniowych. Projekt objął również dostosowanie algorytmów do dystrybucji produktów przez banki.",
+        "Karta NCBR opisuje użycie narzędzia przez spółkę przy kalkulacji składek we współpracy z towarzystwami ubezpieczeniowymi i brokerami.",
+        (("NCBR – opis narzędzia i jego wykorzystania", NCBR+"projekt-br-laven"),),
+    ),
     ZEUS: (
         "yes", ("Technologie medyczne i biotechnologia",),
         "Zeus to modułowa proteza dłoni sterowana sygnałami elektrycznymi mięśni. Mechanizm obejmuje niezależnie poruszające się palce i kciuk do różnych chwytów.",
@@ -123,6 +130,23 @@ def enrich(db):
             db.execute("UPDATE projects SET page_url=? WHERE id=?", (sources[0][1], project_id))
         db.executemany("INSERT INTO project_review_sources VALUES(?,?,?)",
                        ((project_id, label, url) for label, url in sources))
+    db.execute("""
+        CREATE TABLE project_source_fragments (
+            project_id INTEGER PRIMARY KEY, source_url TEXT NOT NULL, fragments TEXT NOT NULL
+        )
+    """)
+    reviewed = 0
+    for file in sorted(Path("sources/review500").glob("*.json")):
+        for source, source_id, source_url, fragments in json.loads(file.read_text(encoding="utf-8")):
+            row = db.execute("SELECT id FROM projects WHERE source=? AND source_id=?",
+                             (source, source_id)).fetchone()
+            if row is None:
+                raise ValueError(f"Nie znaleziono karty {source}: {source_id}")
+            db.execute("INSERT INTO project_source_fragments VALUES(?,?,?)",
+                       (row[0], source_url, json.dumps(fragments, ensure_ascii=False)))
+            reviewed += 1
+    if reviewed != 500:
+        raise ValueError(f"Oczekiwano 500 kart z uzupełnieniami, otrzymano {reviewed}.")
     db.execute("DROP TABLE project_words")
     build_lookup(db)
     print(f"Sprawdzono źródła dla {len(REVIEWS)} kart. Poprawiono kategorię regułą tytułu dla {rule_count} kart.")
