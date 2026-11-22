@@ -311,10 +311,15 @@ function describeProject(content, project, preview = false) {
 }
 
 function maturityLabel(project) {
-  if (!project.trl_min) return "TRL 1–9 · brak danych do zawężenia";
+  if (!project.trl_min) return "TRL nieustalony";
   const range = project.trl_min === project.trl_max
     ? project.trl_min : project.trl_min + "–" + project.trl_max;
-  return "TRL " + range + (project.trl_basis === "declared" ? " · deklaracja źródła" : " · szacunek");
+  const basis = {
+    declared: "deklaracja źródła",
+    estimate: "szacunek z opisu",
+    profile: "orientacyjny zakres z profilu projektu",
+  };
+  return "TRL " + range + " · " + (basis[project.trl_basis] || "szacunek");
 }
 
 function showRelated(content, record) {
@@ -404,7 +409,6 @@ function projectCard(result, item) {
   element("h3", item.title, card);
   element("p", maturityLabel(item), card).className = "muted";
   describeProject(card, item, true);
-  if (item.match) element("p", "Dopasowanie: " + item.match, card).className = "muted";
   const button = actionButton("Zobacz projekt", card, trigger => showCatalogDetail(item, trigger));
   button.className = "secondary";
   button.setAttribute("aria-label", "Zobacz projekt: " + item.title);

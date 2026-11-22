@@ -10,5 +10,5 @@ np. `/var/data`. Formularz zapisuje zgłoszenia i załączniki na dysku usługi,
 a zgłoszenia nie są publikowane w katalogu. Panel demonstracyjny pozostaje
 niedostępny z internetu. Po wdrożeniu przetestuj zapis przykładowego zgłoszenia.
 
-Wartość „TRL 1–9 · brak danych do zawężenia” oznacza pełną skalę bez oceny
-dojrzałości. Takie karty nadal odpowiadają filtrowi „Brak danych”.
+Karty podają TRL deklarowany, szacunek z opisu lub orientacyjny zakres wynikający
+z typu projektu. Zakres orientacyjny nie potwierdza wykonania testów ani wdrożenia.
