@@ -1,0 +1,135 @@
+{
+  "kategorie": {
+    "Technologia": {
+      "Robotyka i automatyka": "robotyk|robotyz|robot mobil|robot przem|sterownik plc|mechatron",
+      "Technologie kosmiczne": "satelit|kosmiczn|rakiet nośn|obiektów orbitaln",
+      "Technologie chemiczne": "syntez[ayę] chemiczn|katalizator|technolog\\w+ chemiczn|reaktor chemicz|chemia organiczn",
+      "Motoryzacja i elektromobilność": "samochod|motoryzac|elektromobil|pojazd\\w* elektrycz|baterii trakcyjn",
+      "Kolejnictwo i transport": "kolejow|torowisk|rozjazd|tramwaj|transport\\w* publiczn|logistyk|hałas\\w* przy torach",
+      "Lotnictwo i drony": "lotnicz|bezzałogow|dron\\w*",
+      "Informatyka i telekomunikacja": "oprogramowan|telekomunik|cyberbezpiecze|system informatycz|aplikacj\\w* mobil|sztuczn\\w* inteligenc|uczen\\w* maszynow",
+      "Materiały i technologie produkcji": "kompozyt|nanomateriał|druku? 3d|technologi\\w* produkc|wytwarzani\\w* przyrost|obróbk\\w* cnc",
+      "Energetyka": "magazyn\\w* energii|fotowolta|mikroinstalacj|ciepła odpadow|energetyk|pompa ciepła",
+      "Technologie medyczne i biotechnologia": "wyrob\\w* medycz|diagnostyk|implant\\w*|biotechnolog|telemedyc|protez",
+      "Woda, odpady i środowisko": "oczyszczani\\w* ściek|recykling|gospodark\\w* odpad|uzdatniani\\w* wody|monitoring\\w* środowisk",
+      "Budownictwo i infrastruktura": "budownictw|materiał\\w* budowlan|prefabryk|konstrukcj\\w* budowlan|hydrotechn",
+      "Rolnictwo i żywność": "rolnictw|agrotechn|upraw\\w* roślin|przetwórstw\\w* spożywcz|technologi\\w* żywnoś",
+      "Elektronika i fotonika": "światłow|fotonik|optoelektron|mikroelektron|czujnik|półprzewodnik"
+    },
+    "Edukacja": {
+      "Edukacja przedszkolna": "przedszkol|wychowani\\w* przedszkol",
+      "Edukacja podstawowa": "szkoł\\w* podstawow|klas\\w* [1-8]\\b|szkole podstawow",
+      "Edukacja ponadpodstawowa": "szkoł\\w* ponadpodstawow|liceum|liceal",
+      "Edukacja akademicka": "kształcen\\w* student|dydaktyk\\w* akademick|nauczani\\w* akademick|zajęci\\w* dla student",
+      "Edukacja specjalna i włączająca": "edukacj\\w* włączaj|edukacj\\w* specjaln|specjaln\\w* potrzeb\\w* edukac|szkoł\\w* specjaln",
+      "Kształcenie zawodowe i staże": "kształcen\\w* zawodow|praktyk\\w* zawodow|staż\\w* zawodow|szkoł\\w* zawodow|szkoł\\w* branżow",
+      "Edukacja dorosłych i szkolenia": "edukacj\\w* dorosł|kształcen\\w* ustawiczn|szkoleni\\w* zawodow|uczeni\\w* się przez całe życie",
+      "Narzędzia i metody dydaktyczne": "scenariusz\\w* zajęć|narzędzi\\w* edukac|gra edukac|e-learning|metod\\w* nauczan|metod\\w* dydaktycz"
+    },
+    "Administracja publiczna": {
+      "Wsparcie pracy urzędów": "wsparci\\w* urzęd|zarządzani\\w* urzęd|pracowni\\w* urzęd|kompetencj\\w* administracji",
+      "Automatyzacja i obieg dokumentów": "automatyzacj\\w* urzęd|obieg\\w* dokument\\w*|elektroniczn\\w* zarządzani\\w* dokument|automatyzacj\\w* proces\\w* administr",
+      "E-usługi i obsługa mieszkańców": "e-usług\\w* publiczn|cyfrow\\w* usług\\w* publiczn|obsług\\w* mieszkańc|e-urząd|e-administracj",
+      "Dostępność usług publicznych": "dostępnoś\\w* usług\\w* publiczn|dostępnoś\\w* urzęd|likwidacj\\w* barier\\w* w urzęd",
+      "Partycypacja i konsultacje": "konsultacj\\w* społeczn|budżet\\w* obywatels|partycypacj\\w* obywatels",
+      "Zarządzanie miastem i infrastrukturą": "zarządzani\\w* miastem|smart city|zarządzani\\w* infrastruktur\\w* miejsk|planowani\\w* przestrzenn",
+      "Dane publiczne i interoperacyjność": "otwart\\w* dan\\w* publiczn|interoperacyjnoś\\w* rejestr|rejestr\\w* publiczn",
+      "Zarządzanie kryzysowe i bezpieczeństwo publiczne": "zarządzani\\w* kryzysow|ostrzegani\\w* mieszkańc|bezpieczeństw\\w* publiczn"
+    }
+  },
+  "technologie": {
+    "Oprogramowanie i platformy": "oprogramowan|aplikacj\\w*|platform\\w* cyfrow|system\\w* informatycz",
+    "Dane i AI": "sztuczn\\w* inteligenc|uczen\\w* maszynow|sieci neuron|analiz\\w* danych|model\\w* predykcyjn",
+    "Automatyka i robotyka": "robotyk|robotyz|robot mobil|robot przem|sterownik plc|automatyka|mechatron",
+    "Elektronika i czujniki": "czujnik|elektron|sensor|światłow",
+    "Telekomunikacja i IoT": "telekomunik|internet rzeczy|\\biot\\b|\\b5g\\b|radiokomunikac",
+    "Cyberbezpieczeństwo": "cyberbezpiecz|bezpieczeństw\\w* informatycz|ochron\\w* system\\w* informatycz",
+    "Produkcja i materiały": "druku? 3d|prefabryk|kompozyt|obróbk\\w* cnc|nanomateriał",
+    "Chemia i biotechnologia": "biotechnolog|katalizator|syntez\\w* chemiczn|biokataliz",
+    "Energia i środowisko": "fotowolta|magazyn\\w* energii|recykling|oczyszczani\\w* ściek",
+    "Technika medyczna": "telemedyc|implant|wyrob\\w* medycz|urządzeni\\w* diagnostycz",
+    "Symulacja i modelowanie": "symulacj|model\\w* symulacyj|cyfrow\\w* bliźniak",
+    "GIS i teledetekcja": "teledetekcj|\\bgis\\b|dan\\w* przestrzenn",
+    "VR i AR": "wirtualn\\w* rzeczywistoś|rozszerzon\\w* rzeczywistoś|\\bvr\\b",
+    "Automatyzacja obiegu i usług cyfrowych": "automatyzacj\\w* urzęd|obieg\\w* dokument\\w*|automatyzacj\\w* proces\\w* biurow"
+  },
+  "miejsca": {
+    "Przedszkole": "przedszkol",
+    "Szkoła": "szkoł\\w*|uczni\\w*|szkole",
+    "Uczelnia": "zajęci\\w* akademick|dydaktyk\\w* akademick|kształcen\\w* student",
+    "Urząd lub jednostka samorządu": "urzęd\\w*|samorząd\\w*|administracj\\w* publiczn",
+    "Placówka medyczna": "szpital\\w*|placówk\\w* medyczn|przychodni\\w*",
+    "Zakład produkcyjny": "zakład\\w* produkcyjn|lini\\w* produkcyjn|hal\\w* produkcyjn",
+    "Infrastruktura transportowa": "torowisk|tor\\w* kolejow|stacj\\w* kolejow|skrzyżowan|infrastruktur\\w* transportow|przy torach",
+    "Laboratorium": "laboratori\\w*|warunk\\w* laboratoryjn",
+    "Gospodarstwo rolne": "gospodarstw\\w* roln|upraw\\w* roślin",
+    "Gospodarstwo domowe": "gospodarstw\\w* domow|budyn\\w* mieszkaln",
+    "Oczyszczalnia ścieków": "oczyszczalni\\w* ściek"
+  },
+  "problemy": [
+    [
+      "Hałas i drgania",
+      "Tory i transport szynowy",
+      "Ograniczanie",
+      "hałas|drgań|drgani",
+      "torowisk|torach|toru kolejow|tor\\w* kolejow|kolejow|tramwaj",
+      "ogranicz|redukcj|zmniejsz|tłumi"
+    ],
+    [
+      "Zużycie energii",
+      "Budynki",
+      "Ograniczanie",
+      "zużyci\\w* energii|energochłon|efektywnoś\\w* energetycz",
+      "budyn|ogrzewani",
+      "ogranicz|redukcj|zmniejsz|oszczęd|popraw"
+    ],
+    [
+      "Dostępność",
+      "Usługi publiczne",
+      "Ułatwianie dostępu",
+      "dostępnoś|niepełnosprawnoś|barier",
+      "urzęd|administracj\\w* publicz|usług\\w* publicz",
+      "zwiększ|popraw|ułatwi|likwidacj|dostępn"
+    ],
+    [
+      "Organizacja staży",
+      "Edukacja zawodowa i miejsca pracy",
+      "Usprawnianie organizacji",
+      "staż\\w*|praktyk\\w* zawodow",
+      "szkoł|uczni|firm|pracodawc",
+      "organiz|koordyn|planow|łącze|projektow"
+    ],
+    [
+      "Przestoje",
+      "Linie produkcyjne i transportowe",
+      "Ograniczanie",
+      "przestoj|awari",
+      "lini\\w* (produkcyjn|transportow)|zakład\\w* produkcyjn",
+      "ogranicz|minimaliz|redukcj|zmniejsz|zapobieg"
+    ],
+    [
+      "Zanieczyszczenia",
+      "Ścieki",
+      "Usuwanie",
+      "zanieczyszcze|azot|fosfor",
+      "ściek|oczyszczalni",
+      "usuw|redukcj|oczyszcz"
+    ],
+    [
+      "Odpady",
+      "Gospodarka komunalna",
+      "Odzysk lub usprawnianie zbiórki",
+      "odpad",
+      "komunaln|gmin|mieszkańc",
+      "odzysk|recykling|zbiórk|segregacj"
+    ],
+    [
+      "Dokumentacja i czas obsługi",
+      "Urzędy",
+      "Automatyzacja obsługi",
+      "dokument|wniosk|czas obsług",
+      "urzęd|administracj\\w* publiczn",
+      "automatyzac|cyfryzac|skróc|usprawn"
+    ]
+  ]
+}

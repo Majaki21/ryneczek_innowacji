@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ryneczek Innowacji</title>
+<link rel="icon" href="market.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<script defer src="app.js"></script>
+</head>
+<body>
+<a class="skip" href="#heading">Przejdź do treści</a>
+<header class="masthead">
+  <div class="topbar">
+    <div class="brand"><img class="brand-mark" src="market.svg" alt="" width="36" height="36"><div>Ryneczek Innowacji<small>Podkarpackie Centrum Innowacji</small></div></div>
+    <nav aria-label="Główna nawigacja">
+      <button type="button" data-view="start">Start</button>
+      <button type="button" data-view="discovery">Szukaj projektu</button>
+      <button type="button" data-view="add">Dodaj projekt</button>
+    </nav>
+  </div>
+</header>
+<main>
+  <div class="hero">
+    <span class="label">Środowisko demonstracyjne</span>
+    <h1 id="heading" tabindex="-1">Odkrywaj innowacje</h1>
+    <p id="intro"></p>
+  </div>
+  <div id="search-loader" class="market-loading" hidden aria-hidden="true">
+    <div class="market-stall">
+      <span class="market-produce">🍎</span>
+      <span class="market-produce">🥕</span>
+      <span class="market-produce">🍐</span>
+      <span class="market-crate"></span>
+    </div>
+  </div>
+  <p id="status" tabindex="-1" role="status" aria-live="polite"></p>
+  <section id="start" aria-label="Co chcesz zrobić?" hidden>
+    <div class="tiles">
+      <button type="button" class="tile" data-go="discovery">
+        <span class="tile-icon tile-search" aria-hidden="true"></span>
+        <span class="label">Katalog rozwiązań</span>
+        <span class="tile-title">Szukaj projektu</span>
+        <span class="tile-text">Przeglądaj innowacje z regionu, sprawdzaj ich dowody działania i znajdź rozwiązanie dla swojej instytucji.</span>
+        <span class="tile-cta">Przejdź do katalogu →</span>
+      </button>
+      <button type="button" class="tile" data-go="add">
+        <span class="tile-icon tile-add" aria-hidden="true"></span>
+        <span class="label">Zgłoszenie</span>
+        <span class="tile-title">Dodaj projekt</span>
+        <span class="tile-text">Masz projekt na poziomie TRL 3 lub wyższym? Opisz go, dołącz materiały, a zespół PCI oceni jego potencjał wdrożenia.</span>
+        <span class="tile-cta">Wypełnij formularz →</span>
+      </button>
+    </div>
+  </section>
+  <section id="discovery" aria-label="Katalog" hidden>
+    <form id="filter" class="filters catalog-filters">
+      <label class="phrase-field">Szukaj po frazie
+        <input name="q" type="search" maxlength="500" placeholder="np. jak ograniczyć hałas przy torach" aria-describedby="phrase-help">
+      </label>
+      <p id="phrase-help" class="muted filter-help">Wpisz, czego szukasz, np. „hałas na torach”. Fraza działa razem z wybranymi filtrami.</p>
+      <div id="filter-options" class="filter-options"></div>
+      <div class="filter-actions">
+        <button type="submit">Pokaż projekty</button>
+        <button type="reset" class="secondary">Wyczyść filtry</button>
+      </div>
+    </form>
+    <div class="catalog-toolbar">
+      <h2 id="catalog-heading">Projekty</h2>
+      <p id="catalog-count" class="muted" aria-live="polite"></p>
+    </div>
+    <div id="catalog" class="grid"></div>
+    <div id="catalog-pagination" class="catalog-pagination" aria-label="Strony wyników" hidden>
+      <button id="catalog-prev" type="button" class="secondary">Poprzednia</button>
+      <span id="catalog-page"></span>
+      <button id="catalog-next" type="button" class="secondary">Następna</button>
+    </div>
+  </section>
+  <section id="add" aria-label="Formularz zgłoszenia projektu" hidden>
+    <form id="project" class="project-form" novalidate>
+      <fieldset class="surface">
+        <legend>1. Dane kontaktowe</legend>
+        <p class="muted">Dane kontaktowe widzi wyłącznie zespół PCI. Nie publikujemy ich w katalogu.</p>
+        <div class="two">
+          <label>Imię <input name="first_name" required maxlength="200" autocomplete="given-name"></label>
+          <label>Nazwisko <input name="last_name" required maxlength="200" autocomplete="family-name"></label>
+          <label>Telefon <input name="phone" type="tel" inputmode="tel" maxlength="40" autocomplete="tel" placeholder="np. +48 600 000 000" aria-describedby="phone-error"><span id="phone-error" class="field-error" role="alert" hidden></span></label>
+          <label>E-mail <input name="email" type="email" maxlength="200" autocomplete="email" placeholder="np. jan@firma.pl"></label>
+        </div>
+        <p class="muted hint">Podaj co najmniej jedną formę kontaktu: telefon lub e-mail.</p>
+      </fieldset>
+      <fieldset class="surface">
+        <legend>2. Projekt</legend>
+        <label>Tytuł projektu <input name="title" required maxlength="200"></label>
+        <label>Opis projektu <textarea name="description" required maxlength="1500" rows="5" placeholder="Jaki problem rozwiązujesz, dla kogo i w jaki sposób?"></textarea></label>
+        <div class="field">
+          <span class="field-label">Materiały projektu <span class="optional">opcjonalnie</span></span>
+          <label id="dropzone" class="dropzone">
+            <input id="files" type="file" multiple aria-describedby="drop-help">
+            <span class="drop-icon" aria-hidden="true"></span>
+            <strong>Przeciągnij i upuść pliki tutaj</strong>
+            <span>albo <u>wybierz z dysku</u></span>
+            <span id="drop-help" class="muted">Do 5 plików, maks. 8 MB każdy, np. prezentacja, zdjęcia, dokumentacja.</span>
+          </label>
+          <ul id="file-list" class="file-list" aria-live="polite"></ul>
+        </div>
+        <label><span class="label-row">Opis materiałów <span class="optional">opcjonalnie</span></span><textarea name="attachments_note" maxlength="1500" placeholder="Co zawierają załączone pliki?"></textarea></label>
+      </fieldset>
+      <fieldset class="surface">
+        <legend>3. Dojrzałość i zasięg</legend>
+        <label>Stopień gotowości technologicznej (TRL)
+          <select name="trl" id="trl" required aria-describedby="trl-note">
+            <option value="">Wybierz poziom TRL</option>
+            <option value="1">TRL 1: zaobserwowano podstawowe zasady</option>
+            <option value="2">TRL 2: sformułowano koncepcję technologii</option>
+            <option value="3">TRL 3: eksperymentalne potwierdzenie koncepcji</option>
+            <option value="4">TRL 4: walidacja w laboratorium</option>
+            <option value="5">TRL 5: walidacja w środowisku zbliżonym do rzeczywistego</option>
+            <option value="6">TRL 6: demonstracja w środowisku zbliżonym do rzeczywistego</option>
+            <option value="7">TRL 7: demonstracja prototypu w środowisku operacyjnym</option>
+            <option value="8">TRL 8: system ukończony i zakwalifikowany</option>
+            <option value="9">TRL 9: system sprawdzony w środowisku operacyjnym</option>
+          </select>
+        </label>
+        <div id="trl-note" class="trl-note" role="status" aria-live="polite" hidden></div>
+        <div class="two">
+          <label>Obszar oddziaływania projektu
+            <select name="area" required>
+              <option value="">Wybierz obszar</option>
+              <option>Środowisko i klimat</option><option>Energia</option><option>Mobilność i transport</option>
+              <option>Zdrowie</option><option>Edukacja</option><option>Przemysł i produkcja</option>
+              <option>Rolnictwo i żywność</option><option>Administracja i smart city</option>
+              <option>Społeczeństwo i kultura</option><option>Cyfryzacja i IT</option><option>Inne</option>
+            </select>
+          </label>
+          <label>Zasięg oddziaływania
+            <select name="scope" required>
+              <option value="">Wybierz zasięg</option>
+              <option>lokalny</option><option>regionalny</option><option>krajowy</option><option>międzynarodowy</option>
+            </select>
+          </label>
+        </div>
+        <label><span class="label-row">Link do repozytorium GIT lub innego potwierdzenia</span>
+          <span class="field-note">Może to być repozytorium (GitHub, GitLab), artykuł, publikacja, raport z testów albo inny materiał, który pokazuje, że projekt naprawdę działa. Potrzebujemy go, żeby rzetelnie zweryfikować zgłoszenie, dlatego to pole jest wymagane. Dziękujemy za zrozumienie!</span>
+          <input name="repository" type="url" required maxlength="500" placeholder="https://github.com/… lub link do artykułu"></label>
+        <label><span class="label-row">Gdzie projekt jest wykorzystywany lub testowany? <span class="optional">opcjonalnie</span></span><textarea name="usage" maxlength="1500" placeholder="np. pilotaż w szkole podstawowej w Rzeszowie od marca 2026"></textarea></label>
+      </fieldset>
+      <p id="project-error" class="form-error" role="alert" hidden></p>
+      <div class="form-actions"><button id="project-submit">Wyślij zgłoszenie</button></div>
+    </form>
+    <div id="project-done" class="surface done" tabindex="-1" hidden>
+      <span class="done-icon" aria-hidden="true"></span>
+      <h2>Dziękujemy, projekt został zgłoszony!</h2>
+      <p id="project-done-text"></p>
+      <p class="muted">Zespół PCI zapozna się ze zgłoszeniem i skontaktuje się z Tobą. Karta pozostaje niepubliczna do czasu weryfikacji.</p>
+      <div class="form-actions">
+        <button type="button" id="project-again" class="secondary">Zgłoś kolejny projekt</button>
+        <button type="button" data-go="discovery">Przeglądaj katalog</button>
+      </div>
+    </div>
+  </section>
+  <section id="review" aria-label="Panel demonstracyjny" hidden>
+    <label class="profile-picker">Profil demonstracyjny
+      <select id="actor">
+        <option value="">Wybierz profil</option>
+        <option value="szkola">Szkoła demonstracyjna</option>
+        <option value="uczelnia">Zespół HydroLab · twórca</option>
+        <option value="gmina">Gmina demonstracyjna · wdrażający</option>
+        <option value="miasto">Miasto demonstracyjne · poszukujący</option>
+        <option value="pci">Recenzent PCI</option>
+      </select>
+    </label>
+    <p id="choose-profile">Wybierz profil, aby zobaczyć jego zgłoszenia i dostępne działania.</p>
+    <div id="workspace" hidden>
+      <div class="grid forms">
+        <details class="surface">
+          <summary>Zgłoś innowację</summary>
+          <form id="submission">
+            <label>Tytuł <input name="title" required maxlength="200"></label>
+            <label>Opis problemu i rozwiązania do publikacji <textarea name="summary" required maxlength="1500"></textarea></label>
+            <label>Szczegóły niepubliczne <textarea name="details" maxlength="5000"></textarea></label>
+            <label>Tagi oddzielone przecinkami <input name="tags"></label>
+            <label>Dojrzałość <select name="stage"><option>pomysł</option><option>prototyp</option><option>pilotaż</option><option>wdrożenie</option><option>nieustalony</option></select></label>
+            <fieldset><legend>Podstawa oceny · pola do publikacji</legend>
+              <label>Dowód potrzeby <textarea name="problem_evidence" maxlength="1500"></textarea></label>
+              <label>Dowód działania <textarea name="evidence" maxlength="4000"></textarea></label>
+              <label>Warunki transferu <textarea name="conditions" maxlength="1500"></textarea></label>
+              <label>Warunki do porównania, oddzielone przecinkami <input name="condition_tags"></label>
+            </fieldset>
+            <button>Zapisz zgłoszenie</button>
+          </form>
+        </details>
+        <details id="need-form" class="surface" hidden>
+          <summary>Zgłoś potrzebę</summary>
+          <form id="need">
+            <label>Nazwa potrzeby <input name="title" required maxlength="200"></label>
+            <label>Opis problemu <textarea name="description" maxlength="1500"></textarea></label>
+            <label>Tag <input name="tag" required maxlength="200" placeholder="np. retencja"></label>
+            <label>Dostępne warunki, oddzielone przecinkami <input name="available_conditions" placeholder="np. odpływ z dachu"></label>
+            <button>Zapisz i dopasuj</button>
+          </form>
+        </details>
+      </div>
+      <h2>Moje potrzeby i dopasowania</h2><div id="matches" class="grid"></div>
+      <h2>Zainteresowanie pilotażem</h2><div id="pilots" class="grid"></div>
+      <h2>Karty do przeglądu</h2><div id="queue" class="grid"></div>
+    </div>
+  </section>
+</main>
+<dialog id="detail" aria-labelledby="detail-title">
+  <form method="dialog" class="dialog-bar"><button type="submit" autofocus>Zamknij kartę</button></form>
+  <div id="detail-content"></div>
+</dialog>
+</body>
+</html>
