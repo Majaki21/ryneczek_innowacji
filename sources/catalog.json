@@ -1,0 +1,44 @@
+[
+  {
+    "id": "demo-niecki",
+    "title": "Niecki retencyjne na szkolnym podwórku",
+    "summary": "Po ulewach woda zalewała wejście do szkoły. Niecka przechwytuje deszczówkę z utwardzonej części podwórka.",
+    "tags": [
+      "retencja",
+      "szkolnictwo"
+    ],
+    "stage": "wdrożenie",
+    "evidence": "Fikcyjny dziennik obserwacji. Po trzech opadach objętych obserwacją wejście pozostało dostępne.",
+    "creator": "uczelnia",
+    "adopter": "gmina",
+    "problem_evidence": "Fikcyjna dokumentacja szkoły opisuje zalewanie wejścia po ulewach.",
+    "conditions": "Potrzebne jest miejsce na nieckę poza trasami dojścia.",
+    "condition_tags": [
+      "miejsce na nieckę"
+    ]
+  },
+  {
+    "id": "demo-autobus",
+    "title": "Autobus na zgłoszenie",
+    "summary": "Mieszkańcy rozproszonych miejscowości rezerwują przejazd do centrum gminy z wyprzedzeniem.",
+    "tags": [
+      "mobilność",
+      "dostępność"
+    ],
+    "stage": "pilotaż",
+    "evidence": "Fikcyjny raport pilotażu. Przewoźnik zrealizował 24 rezerwacje w ciągu miesiąca.",
+    "adopter": "gmina"
+  },
+  {
+    "id": "demo-energia",
+    "title": "Monitoring energii w bibliotece",
+    "summary": "Zespół biblioteki odczytuje zużycie energii poza godzinami pracy i planuje zmiany harmonogramów urządzeń.",
+    "tags": [
+      "energia",
+      "budynki"
+    ],
+    "stage": "prototyp",
+    "evidence": "Fikcyjny odczyt licznika. Pierwszy pomiar wskazał zużycie również w dni wolne.",
+    "creator": "uczelnia"
+  }
+]

@@ -311,7 +311,7 @@ function describeProject(content, project, preview = false) {
 }
 
 function maturityLabel(project) {
-  if (!project.trl_min) return "TRL nieustalony";
+  if (!project.trl_min) return "TRL 1–9 · brak danych do zawężenia";
   const range = project.trl_min === project.trl_max
     ? project.trl_min : project.trl_min + "–" + project.trl_max;
   return "TRL " + range + (project.trl_basis === "declared" ? " · deklaracja źródła" : " · szacunek");
